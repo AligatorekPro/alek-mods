@@ -11,11 +11,14 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.Arm;
 import pl.alek.alekclient.mixin.HandledScreenMixin;
 
 /**
  * Item lock na poziomie slotow: w ekwipunku najedz na przedmiot i wcisnij klawisz (domyslnie O).
- * Zablokowany slot ma rozowe tlo z klodka i nie da sie z niego wyrzucic przedmiotu.
+ * Dziala na kazdy slot: ekwipunek, hotbar, zbroja i druga reka (totem).
+ * Zablokowany slot ma rozowa ramke z mala klodka i jest "zamrozony": nie wyrzucisz go, nie przeniesiesz,
+ * nie zamienisz klawiszem F ani cyframi.
  */
 public class ItemLock {
 
@@ -79,34 +82,46 @@ public class ItemLock {
         });
     }
 
-    /** Zablokowane sloty paska szybkiego dostepu (hotbar) tez swieca sie na rozowo. */
+    /** Zablokowane sloty paska szybkiego dostepu (hotbar) i druga reka tez maja ramke. */
     public static void renderHotbar(DrawContext ctx, RenderTickCounter tickCounter) {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (AlekClient.config == null || mc.player == null || mc.options.hudHidden || mc.currentScreen != null) {
             return;
         }
-        int baseX = ctx.getScaledWindowWidth() / 2 - 90 + 2;
+        int center = ctx.getScaledWindowWidth() / 2;
         int y = ctx.getScaledWindowHeight() - 16 - 3;
         for (int i = 0; i < 9; i++) {
             if (isLockedIndex(i)) {
-                drawLock(ctx, baseX + i * 20, y);
+                drawLock(ctx, center - 90 + 2 + i * 20, y);
             }
+        }
+        if (isLockedIndex(40)) {
+            int x = mc.player.getMainArm() == Arm.RIGHT ? center - 91 - 26 : center + 91 + 10;
+            drawLock(ctx, x, y);
         }
     }
 
-    private static void drawLock(DrawContext ctx, int x, int y) {
+    /** Rozowa ramka + mala klodka w rogu. Rysowane wysoko nad przedmiotem, zeby nic jej nie zaslanialo. */
+    static void drawLock(DrawContext ctx, int x, int y) {
         int pink = 0xFFFF69B4;
         int white = 0xFFFFFFFF;
-        ctx.fill(x, y, x + 16, y + 16, 0x66FF69B4);
-        // ramka
+        ctx.getMatrices().push();
+        ctx.getMatrices().translate(0.0f, 0.0f, 450.0f);
+
+        // sama ramka
         ctx.fill(x, y, x + 16, y + 1, pink);
         ctx.fill(x, y + 15, x + 16, y + 16, pink);
         ctx.fill(x, y, x + 1, y + 16, pink);
         ctx.fill(x + 15, y, x + 16, y + 16, pink);
-        // klodka: korpus i kabłąk
-        ctx.fill(x + 9, y + 9, x + 15, y + 14, white);
-        ctx.fill(x + 10, y + 5, x + 14, y + 6, white);
-        ctx.fill(x + 10, y + 6, x + 11, y + 9, white);
-        ctx.fill(x + 13, y + 6, x + 14, y + 9, white);
+
+        // mala klodka w prawym dolnym rogu
+        int lx = x + 10;
+        int ly = y + 10;
+        ctx.fill(lx, ly + 2, lx + 5, ly + 5, white);
+        ctx.fill(lx + 1, ly, lx + 4, ly + 1, white);
+        ctx.fill(lx + 1, ly + 1, lx + 2, ly + 2, white);
+        ctx.fill(lx + 3, ly + 1, lx + 4, ly + 2, white);
+
+        ctx.getMatrices().pop();
     }
 }

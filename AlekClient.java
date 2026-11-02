@@ -65,6 +65,10 @@ public class AlekClient implements ClientModInitializer {
         WorldRenderEvents.AFTER_ENTITIES.register(NickLabels::collect);
         HudRenderCallback.EVENT.register(KeyOverlay::render);
         HudRenderCallback.EVENT.register(ItemLock::renderHotbar);
+        HudRenderCallback.EVENT.register(InventoryHud::render);
+        HudRenderCallback.EVENT.register(TrajectoryRenderer::draw);
+        WorldRenderEvents.AFTER_ENTITIES.register(LootBeams::render);
+        WorldRenderEvents.AFTER_ENTITIES.register(TrajectoryRenderer::render);
         ItemLock.register();
         HudRenderCallback.EVENT.register(NickLabels::draw);
         // zeby przy zamknieciu gry w options.txt nie zapisala sie dziwna jasnosc
@@ -83,6 +87,7 @@ public class AlekClient implements ClientModInitializer {
             freelookActive = false;
             zoomActive = false;
             NickLabels.clear();
+            TrajectoryRenderer.clear();
             return;
         }
 

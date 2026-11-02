@@ -65,7 +65,7 @@ public class HitboxRenderer {
     }
 
     /** Wlasne rysowanie ramki (12 krawedzi), bez zaleznosci od metod Minecrafta, ktore sie przenosza. */
-    private static void drawBox(MatrixStack matrices, VertexConsumer lines, Box b, float r, float g, float bl) {
+    static void drawBox(MatrixStack matrices, VertexConsumer lines, Box b, float r, float g, float bl) {
         MatrixStack.Entry entry = matrices.peek();
         float x1 = (float) b.minX, y1 = (float) b.minY, z1 = (float) b.minZ;
         float x2 = (float) b.maxX, y2 = (float) b.maxY, z2 = (float) b.maxZ;
@@ -88,7 +88,7 @@ public class HitboxRenderer {
         line(entry, lines, x2, y2, z1, x2, y2, z2, ri, gi, bi, 0, 0, 1);
     }
 
-    private static void line(MatrixStack.Entry entry, VertexConsumer lines,
+    static void line(MatrixStack.Entry entry, VertexConsumer lines,
                              float x1, float y1, float z1, float x2, float y2, float z2,
                              int r, int g, int b, float nx, float ny, float nz) {
         lines.vertex(entry, x1, y1, z1).color(r, g, b, 255).normal(entry, nx, ny, nz);

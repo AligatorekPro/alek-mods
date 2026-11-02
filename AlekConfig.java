@@ -42,6 +42,12 @@ public class AlekConfig {
     // Overlay klawiszy i celownik
     public boolean keyOverlay = true;
     public double keyOverlayScale = 1.0;
+
+    // HUD i swiat
+    public boolean inventoryHud = true;
+    public double inventoryHudScale = 0.75;
+    public boolean lootBeams = true;
+    public boolean trajectories = true;
     public boolean customCrosshair = true;
     public String crosshairColor = "#FF69B4";        // rozowy
     public String crosshairTargetColor = "#FF0000";  // gdy celujesz w gracza
@@ -90,6 +96,7 @@ public class AlekConfig {
         zoomFactor = Math.max(1.1, Math.min(100.0, zoomFactor));
         fov = Math.max(30, Math.min(179, fov));
         keyOverlayScale = Math.max(0.5, Math.min(2.0, keyOverlayScale));
+        inventoryHudScale = Math.max(0.5, Math.min(1.5, inventoryHudScale));
         if (lockedSlots == null) {
             lockedSlots = new ArrayList<>();
         }
