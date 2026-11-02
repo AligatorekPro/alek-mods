@@ -1,7 +1,7 @@
 package pl.alek.alekclient.mixin;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientCommonNetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.text.Text;
@@ -11,8 +11,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.alek.alekclient.ItemLock;
 
-/** Item lock: klawisz F (zamiana rak) nie ruszy zablokowanej drugiej reki (np. totemu) ani zablokowanego slotu w rece. */
-@Mixin(ClientPlayNetworkHandler.class)
+/**
+ * Item lock: klawisz F (zamiana rak) nie ruszy zablokowanej drugiej reki (np. totemu) ani zablokowanego slotu w rece.
+ * Metoda sendPacket jest w klasie bazowej ClientCommonNetworkHandler, dlatego mixin celuje w nia.
+ */
+@Mixin(ClientCommonNetworkHandler.class)
 public abstract class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "sendPacket", at = @At("HEAD"), cancellable = true)
