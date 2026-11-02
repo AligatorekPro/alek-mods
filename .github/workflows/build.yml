@@ -11,10 +11,10 @@ jobs:
         run: |
           mkdir -p src/main/java/pl/alek/alekclient/mixin
           mkdir -p src/main/resources/assets/alekclient/lang
-          mv AlekClient.java AlekConfig.java HitboxRenderer.java src/main/java/pl/alek/alekclient/
-          mv CameraMixin.java EntityMixin.java GameRendererMixin.java MouseMixin.java SimpleOptionMixin.java src/main/java/pl/alek/alekclient/mixin/
+          mv *Mixin.java src/main/java/pl/alek/alekclient/mixin/
+          mv *.java src/main/java/pl/alek/alekclient/
           mv fabric.mod.json alekclient.mixins.json src/main/resources/
-          mv en_us.json pl_pl.json src/main/resources/assets/alekclient/lang/
+          mv *_*.json src/main/resources/assets/alekclient/lang/
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
