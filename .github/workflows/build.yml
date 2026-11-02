@@ -1,0 +1,30 @@
+name: build
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Arrange files
+        run: |
+          mkdir -p src/main/java/pl/alek/alekclient/mixin
+          mkdir -p src/main/resources/assets/alekclient/lang
+          mv AlekClient.java AlekConfig.java HitboxRenderer.java src/main/java/pl/alek/alekclient/
+          mv CameraMixin.java EntityMixin.java GameRendererMixin.java MouseMixin.java SimpleOptionMixin.java src/main/java/pl/alek/alekclient/mixin/
+          mv fabric.mod.json alekclient.mixins.json src/main/resources/
+          mv en_us.json pl_pl.json src/main/resources/assets/alekclient/lang/
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.12
+      - name: Build
+        run: gradle build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: alek-client-jar
+          path: build/libs/*.jar
