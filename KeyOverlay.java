@@ -28,8 +28,9 @@ public class KeyOverlay {
                 new Entry(AlekClient.fullbrightKey, "Fullbright", () -> AlekClient.fullbright),
                 new Entry(AlekClient.hitboxKey, "Hitboxy", () -> cfg.hitboxesEnabled),
                 new Entry(AlekClient.fovKey, "FOV", () -> cfg.fovEnabled),
-                new Entry(AlekClient.itemLockKey, "Item lock", () -> AlekClient.itemLock),
-                new Entry(AlekClient.hidePlayersKey, "Ukryj graczy", () -> AlekClient.hidePlayers)
+                new Entry(AlekClient.itemLockKey, "Item lock (EQ)", () -> false),
+                new Entry(AlekClient.hidePlayersKey, "Ukryj graczy", () -> AlekClient.hidePlayers),
+                new Entry(AlekClient.menuKey, "Menu", () -> false)
         );
 
         TextRenderer tr = mc.textRenderer;
@@ -41,8 +42,12 @@ public class KeyOverlay {
             max = Math.max(max, tr.getWidth(lines[i]));
         }
 
+        float scale = (float) cfg.keyOverlayScale;
+        ctx.getMatrices().push();
+        ctx.getMatrices().scale(scale, scale, 1.0f);
+
         int boxW = max + 8;
-        int x = ctx.getScaledWindowWidth() - boxW - 4;
+        int x = (int) (ctx.getScaledWindowWidth() / scale) - boxW - 4;
         int y = 4;
         for (int i = 0; i < lines.length; i++) {
             boolean on = entries.get(i).active().getAsBoolean();
@@ -50,5 +55,7 @@ public class KeyOverlay {
             ctx.drawTextWithShadow(tr, lines[i], x + 4, y + 2, 0xFFFFFFFF);
             y += 14;
         }
+
+        ctx.getMatrices().pop();
     }
 }

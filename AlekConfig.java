@@ -7,6 +7,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Ustawienia moda. Plik: .minecraft/config/alekclient.json
@@ -34,8 +36,12 @@ public class AlekConfig {
     public String itemHitboxColor = "#3399FF";     // niebieski
     public String otherHitboxColor = "#FFFFFF";    // reszta
 
+    // Zablokowane sloty ekwipunku (item lock)
+    public List<Integer> lockedSlots = new ArrayList<>();
+
     // Overlay klawiszy i celownik
     public boolean keyOverlay = true;
+    public double keyOverlayScale = 1.0;
     public boolean customCrosshair = true;
     public String crosshairColor = "#FF69B4";        // rozowy
     public String crosshairTargetColor = "#FF0000";  // gdy celujesz w gracza
@@ -83,6 +89,10 @@ public class AlekConfig {
     public void refresh() {
         zoomFactor = Math.max(1.1, Math.min(100.0, zoomFactor));
         fov = Math.max(30, Math.min(179, fov));
+        keyOverlayScale = Math.max(0.5, Math.min(2.0, keyOverlayScale));
+        if (lockedSlots == null) {
+            lockedSlots = new ArrayList<>();
+        }
         crosshairArgb = argb(crosshairColor, 0xFFFF69B4);
         crosshairTargetArgb = argb(crosshairTargetColor, 0xFFFF0000);
         playerRgb = parse(playerHitboxColor, new float[]{1.0f, 0.41f, 0.71f});

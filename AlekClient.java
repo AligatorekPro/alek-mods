@@ -25,7 +25,6 @@ public class AlekClient implements ClientModInitializer {
     public static double zoomLevel = 10.0;
     public static float zoomCurrent = 1.0f;
     public static boolean fullbright = false;
-    public static boolean itemLock = true;
     public static boolean hidePlayers = false;
 
     public static boolean freelookActive = false;
@@ -44,6 +43,7 @@ public class AlekClient implements ClientModInitializer {
     public static KeyBinding fovDownKey;
     public static KeyBinding itemLockKey;
     public static KeyBinding hidePlayersKey;
+    public static KeyBinding menuKey;
 
     @Override
     public void onInitializeClient() {
@@ -58,11 +58,14 @@ public class AlekClient implements ClientModInitializer {
         fovDownKey = key("fov_down", GLFW.GLFW_KEY_PAGE_DOWN);
         itemLockKey = key("itemlock", GLFW.GLFW_KEY_O);
         hidePlayersKey = key("hide_players", GLFW.GLFW_KEY_N);
+        menuKey = key("menu", GLFW.GLFW_KEY_RIGHT_CONTROL);
 
         ClientTickEvents.END_CLIENT_TICK.register(AlekClient::tick);
         WorldRenderEvents.AFTER_ENTITIES.register(HitboxRenderer::render);
         WorldRenderEvents.AFTER_ENTITIES.register(NickLabels::collect);
         HudRenderCallback.EVENT.register(KeyOverlay::render);
+        HudRenderCallback.EVENT.register(ItemLock::renderHotbar);
+        ItemLock.register();
         HudRenderCallback.EVENT.register(NickLabels::draw);
         // zeby przy zamknieciu gry w options.txt nie zapisala sie dziwna jasnosc
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> fullbright = false);
@@ -117,8 +120,14 @@ public class AlekClient implements ClientModInitializer {
             changeFov(client, -5);
         }
         while (itemLockKey.wasPressed()) {
-            itemLock = !itemLock;
-            msg(client, "Item lock (blokada wyrzucania): " + (itemLock ? "WŁ." : "WYŁ."));
+            int slot = client.player.getInventory().selectedSlot;
+            boolean locked = ItemLock.toggleIndex(slot);
+            msg(client, "Slot " + (slot + 1) + ": " + (locked ? "ZABLOKOWANY" : "odblokowany"));
+        }
+        while (menuKey.wasPressed()) {
+            if (client.currentScreen == null) {
+                client.setScreen(new AlekSettingsScreen(null));
+            }
         }
         while (hidePlayersKey.wasPressed()) {
             hidePlayers = !hidePlayers;

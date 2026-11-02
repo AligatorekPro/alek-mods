@@ -7,6 +7,7 @@
   "key.alekclient.fov": "Toggle custom FOV",
   "key.alekclient.fov_up": "FOV +5",
   "key.alekclient.fov_down": "FOV -5",
-  "key.alekclient.itemlock": "Toggle item lock (no dropping)",
-  "key.alekclient.hide_players": "Toggle hide players"
+  "key.alekclient.itemlock": "Lock/unlock item (hover in inventory or held slot)",
+  "key.alekclient.hide_players": "Toggle hide players",
+  "key.alekclient.menu": "Open Alek Client menu"
 }
