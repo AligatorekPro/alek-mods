@@ -6,5 +6,7 @@
   "key.alekclient.hitboxes": "Toggle colored hitboxes",
   "key.alekclient.fov": "Toggle custom FOV",
   "key.alekclient.fov_up": "FOV +5",
-  "key.alekclient.fov_down": "FOV -5"
+  "key.alekclient.fov_down": "FOV -5",
+  "key.alekclient.itemlock": "Toggle item lock (no dropping)",
+  "key.alekclient.hide_players": "Toggle hide players"
 }

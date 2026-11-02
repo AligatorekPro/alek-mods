@@ -34,6 +34,15 @@ public class AlekConfig {
     public String itemHitboxColor = "#3399FF";     // niebieski
     public String otherHitboxColor = "#FFFFFF";    // reszta
 
+    // Overlay klawiszy i celownik
+    public boolean keyOverlay = true;
+    public boolean customCrosshair = true;
+    public String crosshairColor = "#FF69B4";        // rozowy
+    public String crosshairTargetColor = "#FF0000";  // gdy celujesz w gracza
+
+    public transient int crosshairArgb;
+    public transient int crosshairTargetArgb;
+
     public transient float[] playerRgb;
     public transient float[] animalRgb;
     public transient float[] mobRgb;
@@ -74,11 +83,21 @@ public class AlekConfig {
     public void refresh() {
         zoomFactor = Math.max(1.1, Math.min(100.0, zoomFactor));
         fov = Math.max(30, Math.min(179, fov));
+        crosshairArgb = argb(crosshairColor, 0xFFFF69B4);
+        crosshairTargetArgb = argb(crosshairTargetColor, 0xFFFF0000);
         playerRgb = parse(playerHitboxColor, new float[]{1.0f, 0.41f, 0.71f});
         animalRgb = parse(animalHitboxColor, new float[]{1.0f, 0.87f, 0.0f});
         mobRgb = parse(mobHitboxColor, new float[]{1.0f, 0.0f, 0.0f});
         itemRgb = parse(itemHitboxColor, new float[]{0.2f, 0.6f, 1.0f});
         otherRgb = parse(otherHitboxColor, new float[]{1.0f, 1.0f, 1.0f});
+    }
+
+    private static int argb(String hex, int fallback) {
+        try {
+            return 0xFF000000 | Integer.parseInt(hex.replace("#", "").trim(), 16);
+        } catch (Exception e) {
+            return fallback;
+        }
     }
 
     private static float[] parse(String hex, float[] fallback) {

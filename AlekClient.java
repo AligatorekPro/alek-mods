@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -24,6 +25,8 @@ public class AlekClient implements ClientModInitializer {
     public static double zoomLevel = 10.0;
     public static float zoomCurrent = 1.0f;
     public static boolean fullbright = false;
+    public static boolean itemLock = true;
+    public static boolean hidePlayers = false;
 
     public static boolean freelookActive = false;
     public static float freelookYaw = 0f;
@@ -32,13 +35,15 @@ public class AlekClient implements ClientModInitializer {
     public static float freelookDistance = FREELOOK_DEFAULT_DISTANCE;
     private static Perspective previousPerspective = Perspective.FIRST_PERSON;
 
-    private static KeyBinding zoomKey;
-    private static KeyBinding freelookKey;
-    private static KeyBinding fullbrightKey;
-    private static KeyBinding hitboxKey;
-    private static KeyBinding fovKey;
-    private static KeyBinding fovUpKey;
-    private static KeyBinding fovDownKey;
+    public static KeyBinding zoomKey;
+    public static KeyBinding freelookKey;
+    public static KeyBinding fullbrightKey;
+    public static KeyBinding hitboxKey;
+    public static KeyBinding fovKey;
+    public static KeyBinding fovUpKey;
+    public static KeyBinding fovDownKey;
+    public static KeyBinding itemLockKey;
+    public static KeyBinding hidePlayersKey;
 
     @Override
     public void onInitializeClient() {
@@ -51,9 +56,14 @@ public class AlekClient implements ClientModInitializer {
         fovKey = key("fov", GLFW.GLFW_KEY_K);
         fovUpKey = key("fov_up", GLFW.GLFW_KEY_PAGE_UP);
         fovDownKey = key("fov_down", GLFW.GLFW_KEY_PAGE_DOWN);
+        itemLockKey = key("itemlock", GLFW.GLFW_KEY_O);
+        hidePlayersKey = key("hide_players", GLFW.GLFW_KEY_N);
 
         ClientTickEvents.END_CLIENT_TICK.register(AlekClient::tick);
         WorldRenderEvents.AFTER_ENTITIES.register(HitboxRenderer::render);
+        WorldRenderEvents.AFTER_ENTITIES.register(NickLabels::collect);
+        HudRenderCallback.EVENT.register(KeyOverlay::render);
+        HudRenderCallback.EVENT.register(NickLabels::draw);
         // zeby przy zamknieciu gry w options.txt nie zapisala sie dziwna jasnosc
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> fullbright = false);
 
@@ -69,6 +79,7 @@ public class AlekClient implements ClientModInitializer {
         if (client.player == null) {
             freelookActive = false;
             zoomActive = false;
+            NickLabels.clear();
             return;
         }
 
@@ -104,6 +115,17 @@ public class AlekClient implements ClientModInitializer {
         }
         while (fovDownKey.wasPressed()) {
             changeFov(client, -5);
+        }
+        while (itemLockKey.wasPressed()) {
+            itemLock = !itemLock;
+            msg(client, "Item lock (blokada wyrzucania): " + (itemLock ? "WŁ." : "WYŁ."));
+        }
+        while (hidePlayersKey.wasPressed()) {
+            hidePlayers = !hidePlayers;
+            if (!hidePlayers) {
+                NickLabels.clear();
+            }
+            msg(client, "Ukrywanie graczy: " + (hidePlayers ? "WŁ." : "WYŁ."));
         }
     }
 

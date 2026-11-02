@@ -8,6 +8,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.entity.player.PlayerEntity;
 import pl.alek.alekclient.AlekClient;
 
 /** Freelook (ruch myszka kreci kamera) i wolniejsza mysz podczas zooma. */
@@ -39,5 +41,14 @@ public abstract class EntityMixin {
             return value * Math.pow(AlekClient.zoomCurrent, 0.75);
         }
         return value;
+    }
+
+    /** Ukryci gracze nie blokuja celownika. */
+    @Inject(method = "canHit", at = @At("HEAD"), cancellable = true, require = 0)
+    private void alekclient$noHitHidden(CallbackInfoReturnable<Boolean> cir) {
+        if (AlekClient.hidePlayers && (Object) this instanceof PlayerEntity
+                && (Object) this != MinecraftClient.getInstance().player) {
+            cir.setReturnValue(false);
+        }
     }
 }

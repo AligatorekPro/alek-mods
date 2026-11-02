@@ -45,6 +45,9 @@ public class HitboxRenderer {
             if (e == mc.cameraEntity && mc.options.getPerspective().isFirstPerson()) {
                 continue;
             }
+            if (AlekClient.hidePlayers && e instanceof PlayerEntity && e != mc.player) {
+                continue;
+            }
             if (e.squaredDistanceTo(cam) > 64.0 * 64.0) {
                 continue;
             }

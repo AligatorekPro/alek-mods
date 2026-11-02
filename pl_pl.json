@@ -6,5 +6,7 @@
   "key.alekclient.hitboxes": "Włącz/wyłącz kolorowe hitboxy",
   "key.alekclient.fov": "Włącz/wyłącz własny FOV",
   "key.alekclient.fov_up": "FOV +5",
-  "key.alekclient.fov_down": "FOV -5"
+  "key.alekclient.fov_down": "FOV -5",
+  "key.alekclient.itemlock": "Włącz/wyłącz item lock (blokada wyrzucania)",
+  "key.alekclient.hide_players": "Włącz/wyłącz ukrywanie graczy"
 }

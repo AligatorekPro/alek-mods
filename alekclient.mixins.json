@@ -5,8 +5,13 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "CameraMixin",
+    "ClientPlayerEntityMixin",
+    "ClientPlayerInteractionManagerMixin",
     "EntityMixin",
+    "EntityRenderDispatcherMixin",
     "GameRendererMixin",
+    "InGameHudMixin",
+    "LivingEntityMixin",
     "MouseMixin",
     "SimpleOptionMixin"
   ],
