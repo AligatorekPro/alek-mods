@@ -6,10 +6,11 @@ import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.alek.alekclient.AlekClient;
 
-/** Freelook: ruch myszka kreci kamera, a nie graczem. */
+/** Freelook (ruch myszka kreci kamera) i wolniejsza mysz podczas zooma. */
 @Mixin(Entity.class)
 public abstract class EntityMixin {
 
@@ -20,5 +21,23 @@ public abstract class EntityMixin {
             AlekClient.freelookPitch = MathHelper.clamp(AlekClient.freelookPitch + (float) cursorDeltaY * 0.15f, -90.0f, 90.0f);
             ci.cancel();
         }
+    }
+
+    @ModifyVariable(method = "changeLookDirection", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    private double alekclient$slowX(double cursorDeltaX) {
+        return alekclient$zoomScale(cursorDeltaX);
+    }
+
+    @ModifyVariable(method = "changeLookDirection", at = @At("HEAD"), argsOnly = true, ordinal = 1)
+    private double alekclient$slowY(double cursorDeltaY) {
+        return alekclient$zoomScale(cursorDeltaY);
+    }
+
+    /** Im wiekszy zoom, tym wolniejsza mysz. */
+    private double alekclient$zoomScale(double value) {
+        if (AlekClient.zoomCurrent < 0.999f && (Object) this == MinecraftClient.getInstance().player) {
+            return value * Math.pow(AlekClient.zoomCurrent, 0.75);
+        }
+        return value;
     }
 }

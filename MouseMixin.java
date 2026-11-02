@@ -17,12 +17,13 @@ public abstract class MouseMixin {
             return;
         }
         if (AlekClient.zoomActive) {
-            double factor = AlekClient.config.zoomFactor * (vertical > 0 ? 1.15 : 1.0 / 1.15);
-            AlekClient.config.zoomFactor = Math.max(1.1, Math.min(100.0, factor));
+            double level = AlekClient.zoomLevel * (vertical > 0 ? 1.15 : 1.0 / 1.15);
+            AlekClient.zoomLevel = Math.max(1.1, Math.min(100.0, level));
             ci.cancel();
         } else if (AlekClient.freelookActive) {
-            float d = AlekClient.freelookDistance + (vertical > 0 ? -0.5f : 0.5f);
-            AlekClient.freelookDistance = Math.max(1.0f, Math.min(30.0f, d));
+            // mnozenie zamiast dodawania: kamera oddala sie duzo szybciej
+            float d = AlekClient.freelookDistance * (vertical > 0 ? 1.0f / 1.35f : 1.35f);
+            AlekClient.freelookDistance = Math.max(1.0f, Math.min(40.0f, d));
             ci.cancel();
         }
     }

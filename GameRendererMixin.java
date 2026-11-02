@@ -29,7 +29,7 @@ public abstract class GameRendererMixin {
             }
         }
 
-        float target = AlekClient.zoomActive ? (float) (1.0 / cfg.zoomFactor) : 1.0f;
+        float target = AlekClient.zoomActive ? (float) (1.0 / AlekClient.zoomLevel) : 1.0f;
         AlekClient.zoomCurrent += (target - AlekClient.zoomCurrent) * 0.25f;
         if (Math.abs(AlekClient.zoomCurrent - 1.0f) > 0.001f) {
             result *= AlekClient.zoomCurrent;

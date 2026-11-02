@@ -21,13 +21,15 @@ public class AlekClient implements ClientModInitializer {
 
     // Stan w czasie gry
     public static boolean zoomActive = false;
+    public static double zoomLevel = 10.0;
     public static float zoomCurrent = 1.0f;
     public static boolean fullbright = false;
 
     public static boolean freelookActive = false;
     public static float freelookYaw = 0f;
     public static float freelookPitch = 0f;
-    public static float freelookDistance = 4.0f;
+    public static final float FREELOOK_DEFAULT_DISTANCE = 4.0f;
+    public static float freelookDistance = FREELOOK_DEFAULT_DISTANCE;
     private static Perspective previousPerspective = Perspective.FIRST_PERSON;
 
     private static KeyBinding zoomKey;
@@ -70,7 +72,11 @@ public class AlekClient implements ClientModInitializer {
             return;
         }
 
-        zoomActive = zoomKey.isPressed();
+        boolean zooming = zoomKey.isPressed();
+        if (zooming && !zoomActive) {
+            zoomLevel = config.zoomFactor; // kazde uzycie zooma zaczyna od domyslnej wartosci
+        }
+        zoomActive = zooming;
 
         boolean wantFreelook = freelookKey.isPressed();
         if (wantFreelook && !freelookActive) {
@@ -111,6 +117,7 @@ public class AlekClient implements ClientModInitializer {
     private static void startFreelook(MinecraftClient client) {
         freelookYaw = client.player.getYaw();
         freelookPitch = client.player.getPitch();
+        freelookDistance = FREELOOK_DEFAULT_DISTANCE; // kazde uzycie freelooka zaczyna od domyslnej odleglosci
         previousPerspective = client.options.getPerspective();
         client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
         freelookActive = true;
