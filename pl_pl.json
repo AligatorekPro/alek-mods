@@ -1,0 +1,10 @@
+{
+  "category.alekclient": "Alek Client",
+  "key.alekclient.zoom": "Zoom (przytrzymaj)",
+  "key.alekclient.freelook": "Freelook (przytrzymaj)",
+  "key.alekclient.fullbright": "Włącz/wyłącz Fullbright",
+  "key.alekclient.hitboxes": "Włącz/wyłącz kolorowe hitboxy",
+  "key.alekclient.fov": "Włącz/wyłącz własny FOV",
+  "key.alekclient.fov_up": "FOV +5",
+  "key.alekclient.fov_down": "FOV -5"
+}
